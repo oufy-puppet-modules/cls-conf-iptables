@@ -35,7 +35,85 @@
 #
 # Copyright 2018 Your name here, unless otherwise noted.
 #
-class cls_conf_iptables {
+class cls_conf_iptables($str_type,$str_rules) {
 
+  case $str_type {
+    'std': {
+      class { 'firewall':
+        ensure                          =>      'running',
+      }
+      firewallchain { 'INPUT:filter:IPv4':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'OUTPUT:filter:IPv4':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'FORWARD:filter:IPv4':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'INPUT:filter:IPv6':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'OUTPUT:filter:IPv6':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'FORWARD:filter:IPv6':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+    }
+    'custom': {
+      package {'conntrack-tools':
+        ensure                          =>      installed,
+      }
+      class { 'firewall':
+        ensure                          =>      'running',
+      }
+      contain   'cls_conf_iptables::pre'
+      Firewall {
+        require                         =>      Class['cls_conf_iptables::pre'],
+      }
+      firewallchain { 'INPUT:filter:IPv4':
+        policy                          =>      'drop',
+        purge                           =>      true,
+      }
+      firewallchain { 'OUTPUT:filter:IPv4':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'FORWARD:filter:IPv4':
+        policy                          =>      'drop',
+        purge                           =>      true,
+      }
+      firewallchain { 'INPUT:filter:IPv6':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'OUTPUT:filter:IPv6':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      firewallchain { 'FORWARD:filter:IPv6':
+        policy                          =>      'accept',
+        purge                           =>      true,
+      }
+      include "cls_conf_iptables::custom_rules::$str_rules"
+    }
+    'unmanaged': {
+      package {'conntrack-tools':
+        ensure                          =>      installed,
+      }
+    }
+    default: {
+      class { 'firewall':
+        ensure                          =>      'stopped',
+      }
+    }
+  }
 
 }
