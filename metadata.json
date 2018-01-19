@@ -1,0 +1,14 @@
+{
+  "name": "oufy-cls_conf_iptables",
+  "version": "0.1.0",
+  "author": "oufy",
+  "summary": "Manage iptables configuration",
+  "license": "GPLv3",
+  "source": "git@github.com:oufy-puppet-modules/cls-conf-iptables.git",
+  "project_page": "https://github.com/oufy-puppet-modules/cls-conf-iptables",
+  "issues_url": "https://github.com/oufy-puppet-modules/cls-conf-iptables/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
